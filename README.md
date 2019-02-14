@@ -8,3 +8,15 @@ CloudFormation 과 Python 을 이용하여 AWS App Stack 을 구성하는 방법
 ## Assets([assets.py](templates/assets.py))
 
 정적 자원을 저장할 S3 스토리지를 생성하고, Route53 을 이용해 도메인을 연동해 주고, CloudFront(CDN) 을 연결합니다.
+
+아래 명령으로 `assets` 템플릿을 스택으로 생성합니다.(create)
+
+```bash
+python cfn.py -c -t assets
+```
+
+아래 명령으로 변경된 스택을 반영합니다.(update)
+
+```bash
+python cfn.py -t assets
+```
