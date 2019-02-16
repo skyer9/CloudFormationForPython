@@ -62,3 +62,12 @@ AWS ACM(AWS Certificate Manager) 에서 인증서를 생성 또는 등록하면 
 python cfn.py -c -t assets-https-enabled
 python cfn.py -t assets-https-enabled
 ```
+
+## Network([network.py](templates/network.py))
+
+아래 명령으로 네트워크 레이어를 생성할 수 있습니다.
+
+```bash
+python cfn.py -c -t network
+python cfn.py -t network
+```

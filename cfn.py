@@ -32,6 +32,24 @@ def update(template_name):
         cfn_update(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'assets-https-enabled':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import assets_https_enabled as template
+        cfn_update(cfn_conn, stack_name, template.get())
+        return 0
+
+    if template_name == 'ecr':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import ecr as template
+        cfn_update(cfn_conn, stack_name, template.get())
+        return 0
+
+    if template_name == 'network':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import network as template
+        cfn_update(cfn_conn, stack_name, template.get())
+        return 0
+
     return 1
 
 
@@ -55,6 +73,11 @@ def create(template_name):
         cfn_create(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'network':
+        from templates import network as template
+        cfn_create(cfn_conn, stack_name, template.get())
+        return 0
+
     return 1
 
 
@@ -67,6 +90,7 @@ def parse_args():
                             'assets',
                             'assets-https-enabled',
                             'ecr',
+                            'network',
                         ],
                         required=True,
                         type=str)
