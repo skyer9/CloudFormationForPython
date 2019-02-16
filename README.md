@@ -24,3 +24,8 @@ python cfn.py -t assets
 ## Assets([assets_https_enabled.py](templates/assets_https_enabled.py))
 
 AWS ACM(AWS Certificate Manager) 에서 인증서를 생성 또는 등록하면 HTTPS 로 접속할 수 있습니다.
+
+```bash
+python cfn.py -c -t assets-https-enabled
+python cfn.py -t assets-https-enabled
+```
