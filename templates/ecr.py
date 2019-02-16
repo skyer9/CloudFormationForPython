@@ -5,7 +5,7 @@ from troposphere import (
     Ref,
     Output,
     Template,
-)
+    Export, Sub)
 from troposphere.ecr import Repository
 from awacs.aws import (
     Allow,
@@ -63,6 +63,13 @@ template.add_output(Output(
         ".amazonaws.com/",
         Ref(repository),
     ]),
+))
+
+template.add_output(Output(
+    "Repository",
+    Description="ECR Repository",
+    Value=Ref(repository),
+    Export=Export(Sub("${AWS::StackName}-Repository")),
 ))
 
 

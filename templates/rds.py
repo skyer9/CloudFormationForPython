@@ -8,8 +8,8 @@ from troposphere import (
     GetAtt,
     Output,
     ImportValue,
-    Sub
-)
+    Sub,
+    Export)
 
 from configuration import (
     stack_base_name,
@@ -80,7 +80,15 @@ template.add_output(Output(
         GetAtt("MySQL", "Endpoint.Port"),
         "/",
         db_name,
-    ])
+    ]),
+    Export=Export(Sub("${AWS::StackName}-JDBCConnectionString")),
+))
+
+template.add_output(Output(
+    "MySQLInstance",
+    Description="MySQL Instance",
+    Value=Ref(db_instance),
+    Export=Export(Sub("${AWS::StackName}-MySQLInstance")),
 ))
 
 

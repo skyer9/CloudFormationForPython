@@ -80,3 +80,12 @@ python cfn.py -t network
 python cfn.py -c -t rds
 python cfn.py -t rds
 ```
+
+## Cluster([cluster.py](templates/cluster.py))
+
+아래 명령으로 ECS 클러스터를 구성할 수 있다.
+
+```bash
+python cfn.py -c -t cluster
+python cfn.py -t cluster
+```

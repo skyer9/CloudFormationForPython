@@ -14,12 +14,12 @@ def cfn_connect(region_name_to_connect):
     return boto.cloudformation.connect_to_region(region_name_to_connect)
 
 
-def cfn_update(cfn_conn, stack_name, template_body):
-    cfn_conn.update_stack(stack_name, template_body=template_body)
+def cfn_update(cfn_conn, stack_name, template_body, capabilities=None):
+    cfn_conn.update_stack(stack_name, template_body=template_body, capabilities=capabilities)
 
 
-def cfn_create(cfn_conn, stack_name, template_body):
-    cfn_conn.create_stack(stack_name, template_body=template_body)
+def cfn_create(cfn_conn, stack_name, template_body, capabilities=None):
+    cfn_conn.create_stack(stack_name, template_body=template_body, capabilities=capabilities)
 
 
 def update(template_name):
@@ -56,6 +56,12 @@ def update(template_name):
         cfn_update(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'cluster':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import cluster as template
+        cfn_update(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
+        return 0
+
     return 1
 
 
@@ -89,6 +95,11 @@ def create(template_name):
         cfn_create(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'cluster':
+        from templates import cluster as template
+        cfn_create(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
+        return 0
+
     return 1
 
 
@@ -103,6 +114,7 @@ def parse_args():
                             'ecr',
                             'network',
                             'rds',
+                            'cluster',
                         ],
                         required=True,
                         type=str)

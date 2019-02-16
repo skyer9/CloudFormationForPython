@@ -4,7 +4,7 @@ from troposphere import (
     Output,
     Ref,
     Template,
-)
+    Export, Sub)
 from troposphere.route53 import (
     RecordSetGroup,
     RecordSet,
@@ -28,6 +28,7 @@ from troposphere.cloudfront import (
 )
 from configuration import (
     root_domain_name,
+    acm_certificate_arn,
 )
 
 assets_domain_name = "assets." + root_domain_name
@@ -99,7 +100,7 @@ distribution = template.add_resource(Distribution(
         )],
         ViewerCertificate=ViewerCertificate(
             # 인증키는 미국동부(버지니아 북부) 리전에서 생성한 것만 사용가능하다.
-            AcmCertificateArn="arn:aws:acm:us-east-1:061175447448:certificate/d6c212a8-8871-XXXXXXXXXXXXXXX",
+            AcmCertificateArn=acm_certificate_arn,
             SslSupportMethod='sni-only'
         ),
         DefaultCacheBehavior=DefaultCacheBehavior(
@@ -151,6 +152,20 @@ template.add_output(Output(
     "AssetsDistributionDomainName",
     Description="AssetsDistribution Domain Name",
     Value=GetAtt(distribution, "DomainName")
+))
+
+template.add_output(Output(
+    "AssetsBucket",
+    Description="LoadBalancer of the VPN connected subnet",
+    Value=Ref(assets_bucket),
+    Export=Export(Sub("${AWS::StackName}-AssetsBucket")),
+))
+
+template.add_output(Output(
+    "Distribution",
+    Description="CloudFront Distribution",
+    Value=Ref(distribution),
+    Export=Export(Sub("${AWS::StackName}-Distribution")),
 ))
 
 

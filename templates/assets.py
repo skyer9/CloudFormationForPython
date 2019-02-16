@@ -4,7 +4,7 @@ from troposphere import (
     Output,
     Ref,
     Template,
-)
+    Export, Sub)
 from troposphere.route53 import (
     RecordSetGroup,
     RecordSet,
@@ -142,6 +142,20 @@ template.add_output(Output(
     "AssetsDistributionDomainName",
     Description="AssetsDistribution Domain Name",
     Value=GetAtt(distribution, "DomainName")
+))
+
+template.add_output(Output(
+    "AssetsBucket",
+    Description="LoadBalancer of the VPN connected subnet",
+    Value=Ref(assets_bucket),
+    Export=Export(Sub("${AWS::StackName}-AssetsBucket")),
+))
+
+template.add_output(Output(
+    "Distribution",
+    Description="CloudFront Distribution",
+    Value=Ref(distribution),
+    Export=Export(Sub("${AWS::StackName}-Distribution")),
 ))
 
 
