@@ -62,6 +62,12 @@ def update(template_name):
         cfn_update(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
         return 0
 
+    if template_name == 'ecs':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import ecs as template
+        cfn_update(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
+        return 0
+
     return 1
 
 
@@ -100,6 +106,11 @@ def create(template_name):
         cfn_create(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
         return 0
 
+    if template_name == 'ecs':
+        from templates import ecs as template
+        cfn_create(cfn_conn, stack_name, template.get(), capabilities=['CAPABILITY_IAM'])
+        return 0
+
     return 1
 
 
@@ -115,6 +126,7 @@ def parse_args():
                             'network',
                             'rds',
                             'cluster',
+                            'ecs',
                         ],
                         required=True,
                         type=str)

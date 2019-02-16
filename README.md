@@ -89,3 +89,12 @@ python cfn.py -t rds
 python cfn.py -c -t cluster
 python cfn.py -t cluster
 ```
+
+## Service([ecs.py](templates/ecs.py))
+
+아래 명령으로 ECS 서비스 스택을 구성할 수 있다.
+
+```bash
+python cfn.py -c -t ecs
+python cfn.py -t ecs
+```

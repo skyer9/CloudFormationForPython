@@ -26,6 +26,7 @@ db_password = "wYIr9zpQIzuVTCqPOpOQV6lQX1MlgM1E"
 container_instance_type = "t2.micro"
 max_container_instances = 3
 desired_container_instances = 3
+autoscaling_group_name = "AutoScalingGroup"
 
 # for service
 application_revision = ""

@@ -15,7 +15,7 @@ from troposphere import (
     ImportValue,
     Sub,
     elasticloadbalancingv2,
-)
+    Export)
 
 from troposphere.ec2 import (
     SecurityGroup,
@@ -46,6 +46,7 @@ from configuration import (
     loadbalancer_a_subnet_cidr,
     loadbalancer_b_subnet_cidr,
     acm_cluster_certificate_arn,
+    autoscaling_group_name,
 )
 
 vpc = ImportValue(Sub(stack_base_name + '-network-VPCId'))
@@ -119,7 +120,6 @@ application_load_balancer = template.add_resource(LoadBalancer(
 application_listener = template.add_resource(Listener(
     'ApplicationListener',
     Certificates=[elasticloadbalancingv2.Certificate(
-        # CertificateArn=Ref(application_certificate),
         CertificateArn=acm_cluster_certificate_arn,
     )],
     LoadBalancerArn=Ref(application_load_balancer),
@@ -244,7 +244,6 @@ container_security_group = template.add_resource(SecurityGroup(
 ))
 
 container_instance_configuration_name = "ContainerLaunchConfiguration"
-autoscaling_group_name = "AutoScalingGroup"
 
 container_instance_configuration = template.add_resource(autoscaling.LaunchConfiguration(
     container_instance_configuration_name,
@@ -377,6 +376,20 @@ template.add_output(Output(
     "LoadBalancerDNSName",
     Description="Loadbalancer DNS",
     Value=GetAtt(application_load_balancer, "DNSName")
+))
+
+template.add_output(Output(
+    "Cluster",
+    Description="Cluster",
+    Value=Ref(cluster),
+    Export=Export(Sub("${AWS::StackName}-Cluster")),
+))
+
+template.add_output(Output(
+    "ApplicationTargetGroup",
+    Description="Application Target Group",
+    Value=Ref(application_target_group),
+    Export=Export(Sub("${AWS::StackName}-ApplicationTargetGroup")),
 ))
 
 
