@@ -71,3 +71,12 @@ python cfn.py -t assets-https-enabled
 python cfn.py -c -t network
 python cfn.py -t network
 ```
+
+## Database([rds.py](templates/rds.py))
+
+아래 명령으로 MySQL 데이타베이스 서버를 구성할 수 있다.
+
+```bash
+python cfn.py -c -t rds
+python cfn.py -t rds
+```

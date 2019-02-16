@@ -50,6 +50,12 @@ def update(template_name):
         cfn_update(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'rds':
+        print("Updating stack: {0}".format(stack_name))
+        from templates import rds as template
+        cfn_update(cfn_conn, stack_name, template.get())
+        return 0
+
     return 1
 
 
@@ -78,6 +84,11 @@ def create(template_name):
         cfn_create(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'rds':
+        from templates import rds as template
+        cfn_create(cfn_conn, stack_name, template.get())
+        return 0
+
     return 1
 
 
@@ -91,6 +102,7 @@ def parse_args():
                             'assets-https-enabled',
                             'ecr',
                             'network',
+                            'rds',
                         ],
                         required=True,
                         type=str)
