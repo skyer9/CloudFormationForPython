@@ -30,16 +30,27 @@ def update(template_name):
         print("Updating stack: {0}".format(stack_name))
         from templates import assets as template
         cfn_update(cfn_conn, stack_name, template.get())
+        return 0
+
+    return 1
 
 
 def create(template_name):
     cfn_conn = cfn_connect(region_name)
     stack_name = stack_base_name + '-' + template_name
+    print("Creating stack: {0}".format(stack_name))
 
     if template_name == 'assets':
-        print("Creating stack: {0}".format(stack_name))
         from templates import assets as template
         cfn_create(cfn_conn, stack_name, template.get())
+        return 0
+
+    if template_name == 'assets-https-enabled':
+        from templates import assets_https_enabled as template
+        cfn_create(cfn_conn, stack_name, template.get())
+        return 0
+
+    return 1
 
 
 def parse_args():
@@ -49,7 +60,7 @@ def parse_args():
     parser.add_argument('-t', '--template',
                         choices=[
                             'assets',
-                            'assets_https_enabled',
+                            'assets-https-enabled',
                         ],
                         required=True,
                         type=str)

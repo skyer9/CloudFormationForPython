@@ -24,6 +24,7 @@ from troposphere.cloudfront import (
     CustomOriginConfig,
     Origin,
     DefaultCacheBehavior,
+    ViewerCertificate
 )
 from configuration import (
     root_domain_name,
@@ -34,7 +35,7 @@ assets_domain_name = "assets." + root_domain_name
 template = Template()
 
 template.set_description(
-    "AWS CloudFormation Template to create needed resources for static site "
+    "AWS CloudFormation Template to create needed resources for static site(both http and https) "
     "hosting using s3, CloudFront and route53.  It assumes that "
     "you already  have a Hosted Zone registered with Amazon Route 53. "
 )
@@ -91,12 +92,17 @@ distribution = template.add_resource(Distribution(
             Id="AssetsBucketOrigin",
             DomainName=GetAtt(assets_bucket, "DomainName"),
             CustomOriginConfig=CustomOriginConfig(
+                HTTPPort=80,
+                HTTPSPort=443,
                 OriginProtocolPolicy="http-only"
             ),
         )],
+        ViewerCertificate=ViewerCertificate(
+            # 인증키는 미국동부(버지니아 북부) 리전에서 생성한 것만 사용가능하다.
+            AcmCertificateArn="arn:aws:acm:us-east-1:061175447448:certificate/d6c212a8-8871-XXXXXXXXXXXXXXX",
+            SslSupportMethod='sni-only'
+        ),
         DefaultCacheBehavior=DefaultCacheBehavior(
-            AllowedMethods=["GET", "HEAD"],
-            Compress="True",
             TargetOriginId="AssetsBucketOrigin",
             ViewerProtocolPolicy="allow-all",
             ForwardedValues=ForwardedValues(QueryString=True)
@@ -127,15 +133,18 @@ template.add_resource(RecordSetGroup(
 ))
 
 template.add_output(Output(
-    "DomainName",
-    Description="S3 Domain Name",
-    Value=GetAtt(assets_bucket, "DomainName")
+    "WebsiteURL",
+    Description="S3 Website URL",
+    Value=GetAtt(assets_bucket, "WebsiteURL"),
 ))
 
 template.add_output(Output(
-    "WebsiteURL",
-    Description="S3 Website URL",
-    Value=GetAtt(assets_bucket, "WebsiteURL")
+    "WebsiteSecureURL",
+    Description="S3 Secure Website URL",
+    Value=Join("", [
+        "https://",
+        GetAtt(assets_bucket, "DomainName"),
+    ])
 ))
 
 template.add_output(Output(
