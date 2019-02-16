@@ -50,6 +50,11 @@ def create(template_name):
         cfn_create(cfn_conn, stack_name, template.get())
         return 0
 
+    if template_name == 'ecr':
+        from templates import ecr as template
+        cfn_create(cfn_conn, stack_name, template.get())
+        return 0
+
     return 1
 
 
@@ -61,6 +66,7 @@ def parse_args():
                         choices=[
                             'assets',
                             'assets-https-enabled',
+                            'ecr',
                         ],
                         required=True,
                         type=str)
